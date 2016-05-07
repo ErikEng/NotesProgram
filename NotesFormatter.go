@@ -6,11 +6,16 @@ import (
     "fmt"
     "time"
     "log"
+    "io/ioutil"
 )
 
 func main() {
 	start := time.Now()
-	err := CreatePng("picture.html")
+	d1 := []byte("<hmtl>\n<header> Subject, Date </header>\n<div> Lorem ipsum dolor sit amet. Nunc quis pellentesque nibh. Ut vitae <b>Aenean placerat </b> nisi eget iaculis facilisis.</div> \n <embed  src=\"Slides/lect1.pdf\" width=\"800px\" height=\"2100px\">")
+	
+	os.Create("GoTest.html")
+    err := ioutil.WriteFile("GoTest.html", d1, 0644)
+	//err := CreatePng("picture.html")
 	if err != nil {
 			log.Fatal(err)
 		}
