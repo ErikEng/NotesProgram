@@ -16,5 +16,6 @@ So you could for example write :slide1: in the text which would later insert the
 
 ## Possible additional features
 1 Integration with other apps such as Anki or Gdocs so that you by codewords can send information to other apps, such as saving the note to your google drive or put text snippets onto Anki cards
+
 2 By a code word such as :PutIn "Proofs.html": so the coming snippet gets copied into another html document in the map. If the file in the PutIn command can't be found, create a file with that name  
 
