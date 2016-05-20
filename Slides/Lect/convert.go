@@ -8,7 +8,7 @@ import (
 
 func main() {
 	cmd := "convert"
-	args := []string{"lect1.pdf", "slide%d.jpg"}
+	args := []string{"-verbose", "-density 150", "-trim", "lect1.pdf", "qualtiy 100", "-sharpen 0x1.0", "slide%d.jpg"}
 	if err := exec.Command(cmd, args...).Run(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
