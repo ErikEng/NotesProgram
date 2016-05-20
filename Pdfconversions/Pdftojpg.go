@@ -8,8 +8,8 @@ import (
 
 func main() {
 	cmd := "convert"
-	args := []string{"-verbose", "-density 150", "-trim", "lect1.pdf", "qualtiy 100", "-sharpen 0x1.0", "ExampleSlide%d.jpg"}
-	if err := exec.Command(cmd, args...).Run(); err != nil {
+	args := []string{"-verbose", "-density", "150", "lect1.pdf", "-quality", "100", "ExampleSlide%d.jpg"}
+	if err := exec.Command(cmd, args...).Run(); err != nil {	
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
