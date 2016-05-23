@@ -38,12 +38,14 @@ func commandSearcher(providedText []byte) (text []byte){
 	//words := strings.Fields(providedText) // Fields extracts the words into a slice.
 	//var formated []byte
 	text = providedText
-	dateCW := regexp.FindIndex(":date:", providedText) //returns value and index of the match
+	datext := string(providedText)
+	re := regexp.MustCompile(datext)
+	dateCW := re.FindIndex([]byte(":date:")) //returns value and index of the match
 	if dateCW != nil {
 		//replaces the codeword :date: with the current date
 		currentTime:=time.Now().Format("2006-01-02 15:04:05")
-
-		providedText[dateCW[0]:dateCW[1]]=  byte(currentTime) //reoplaces the codeword :date: with the current date
+		//re.ReplaceAllFunc()
+		text[dateCW[0]:dateCW[1]]=  []byte(currentTime) //reoplaces the codeword :date: with the current date
 		}
 		//if strings.EqualFold("", w)
 
