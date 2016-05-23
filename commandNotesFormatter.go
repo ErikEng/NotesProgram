@@ -34,20 +34,20 @@ func main() {
    	//exec.Command("run", response).Run();
 }
 
-func commandSearcher(providedText []byte) (formated []byte){
+func commandSearcher(providedText []byte) (text []byte){
 	//words := strings.Fields(providedText) // Fields extracts the words into a slice.
 	//var formated []byte
-	for _, w := range providedText {
-		date, _ := regexp.Match(":date:", w) //returns date true or false
-		if  date {
+	text = providedText
+	dateCW := regexp.FindIndex(":date:", providedText) //returns value and index of the match
+	if dateCW != nil {
 		//replaces the codeword :date: with the current date
 		currentTime:=time.Now().Format("2006-01-02 15:04:05")
 
-		w =  byte(currentTime)
+		providedText[dateCW[0]:dateCW[1]]=  byte(currentTime) //reoplaces the codeword :date: with the current date
 		}
 		//if strings.EqualFold("", w)
 
-		append(formated, w...)
-	}
-	return formated
+		
+	
+	return text
 }
