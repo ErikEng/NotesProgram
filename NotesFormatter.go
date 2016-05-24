@@ -9,6 +9,7 @@ import (
     "strings"
     "time"
     "os/exec"
+    "regexp"
     //"bufio"
 )
 
@@ -45,11 +46,20 @@ func commandSearcher(providedByte []byte) (text []byte){
 	var buffer bytes.Buffer
 	providedText := string(providedByte)
 	w := strings.Fields(providedText)
+	date, _ := regexp.Compile(":date:") //create regexp for date-command
+	slide, _ := regexp.Compile(":slide:")
 	for _, word := range w {
-		if strings.EqualFold(word, ":date:") {
+		
+ 
+		if date.MatchString(word) {
+		//if /[:date:]/ {	
 			currentTime:=time.Now().Format("2006-01-02 15:04:05")
 			//fmt.Print("success" + currentTime)
 			buffer.WriteString(currentTime)
+		} else if slide.MatchString(word) {
+			slideSource := "Slides/"+word[5:len(word)] //takes out the source of the slide and its name 
+			htmlExpression=("<embed  src="+slideSource+" width="800px" height="2100px">")
+			buffer.WriteString(htmlExpression) //inserts the slide into the html text
 		} else {
 			buffer.WriteString(word)
 		}
