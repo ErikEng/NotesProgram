@@ -13,31 +13,33 @@ import (
 )
 
 func main() {
-	var response string
+	var nameOfFile string
 	var sourceName string
 	fmt.Print("Enter the name you want for your file:")
-	_ , err := fmt.Scanln(&response)
+	_ , err := fmt.Scanln(&nameOfFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Print("What is the full name of your text?:")
 	fmt.Scanln(&sourceName)
 	sourceText, _ := ioutil.ReadFile(sourceName)
-	response += ".html"
-	finnishedText := commandSearcher(sourceText)
-    ioutil.WriteFile(response, finnishedText, 0644)
+	nameOfFile += ".html"
+	finnishedText := commandSearcher(sourceText,nameOfFile)
+    ioutil.WriteFile(nameOfFile, finnishedText, 0644)
 }
 
-func commandSearcher(providedByte []byte) (text []byte){
+func commandSearcher(providedByte []byte, theTitle string) (text []byte){
 	var buffer bytes.Buffer
 	providedText := string(providedByte)
 	w := strings.Fields(providedText)
 	date, _ := regexp.Compile(":date:") //create regexp for date-command
 	slide, _ := regexp.Compile(":slide:")
 	title, _ := regexp.Compile(":title:")
-	newLine, _ := regexp.Compile(":end:")
-	buffer.WriteString("<div>")
-	n := 0
+	endWord, _ := regexp.Compile(":end:")
+	video, _ := regexp.Compile(":video:")
+	textFormating := ("<html><head><meta charset=\"utf-8\"><metaname=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>"+ theTitle +"</title><style type=\"text/css\">body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}  </style></head><div>")
+ 	buffer.WriteString(textFormating)
+ 	n := 0
 	for n < len(w) {
 		word := w[n]
  
@@ -57,20 +59,26 @@ func commandSearcher(providedByte []byte) (text []byte){
 
 		} else if title.MatchString(word) {
 			title := ""
-			for n < len(w) && !newLine.MatchString(w[n+1]) {   // loop until you've encountered newline
+			for n < len(w) && !endWord.MatchString(w[n+1]) {   // loop until you've encountered newline
 				title += " " + w[n+1]
 				n++  //increase n so title isn't looped through and printed again
 			}
 			n++ //ignore the :end: command
 			divExpression := "<h1>" + title + "</h1>"
 			buffer.WriteString(divExpression)
-			
+		} else if video.MatchString(word) {
+			url := w[n+1]
+			statement := "</div> <iframe title=\"YouTube video player\" class=\"youtube-player\" type=\"text/html\" width=\"640\"  height=\"390\" src=\""+ url +"\" frameborder=\"0\" allowFullScreen></iframe> <div>"
+			buffer.WriteString(statement)
+			n++
+		
 		} else {
 			buffer.WriteString(word)
 		}
 		n++
 		buffer.WriteString(" ")
 	}
+	buffer.WriteString("</html>")
 	text = []byte(buffer.String())
 	return text
 }
