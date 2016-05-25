@@ -3,13 +3,15 @@ package main
 import (
 	//"os"
 //    "bytes"
+	"strings"
     "fmt"
     "log"
     "io/ioutil"
     //"os/exec"
-    "regexp"
+    //"regexp"
     //"strings"
     "time"
+    "bytes"
     //"bufio"
 )
 
@@ -37,19 +39,30 @@ func main() {
 func commandSearcher(providedText []byte) (text []byte){
 	//words := strings.Fields(providedText) // Fields extracts the words into a slice.
 	//var formated []byte
-	text = providedText
-	datext := string(providedText)
-	re := regexp.MustCompile(datext)
-	dateCW := re.FindIndex([]byte(":date:")) //returns value and index of the match
-	if dateCW != nil {
-		//replaces the codeword :date: with the current date
-		currentTime:=time.Now().Format("2006-01-02 15:04:05")
-		//re.ReplaceAllFunc()
-		text[dateCW[0]:dateCW[1]]=  []byte(currentTime) //reoplaces the codeword :date: with the current date
+	var buffer bytes.Buffer
+	for _, word := range providedText {
+		if strings.Compare(string(word), ":date:") == 0 {
+			currentTime:=time.Now().Format("2006-01-02 15:04:05")
+			buffer.WriteString(currentTime)
+		} else {
+			buffer.WriteString(string(word))
 		}
+	}
+	text = []byte(buffer.String())
+	return text
+	}
+
+	//re := regexp.MustCompile(datext)
+	//dateCW := re.FindIndex([]byte(":date:")) //returns value and index of the match
+	//if dateCW != nil {
+		//replaces the codeword :date: with the current date
+	//	currentTime:=time.Now().Format("2006-01-02 15:04:05")
+		//re.ReplaceAllFunc()
+	//	text[dateCW[0]:dateCW[1]] =  []byte("asdads") //reoplaces the codeword :date: with the current date
+	//	}
 		//if strings.EqualFold("", w)
 
 		
 	
-	return text
-}
+	//return text
+//}
